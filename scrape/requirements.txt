@@ -1,0 +1,3 @@
+pymongo
+flask
+vk_api

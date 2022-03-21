@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  db:
+    image: mongo:5.0-focal
+    volumes:
+      - daterdata:/data/db
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+  
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - db
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@db:27017/
+  
+  scraper:
+    build: ./scrape
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    environment:
+      MONGO_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@db:27017/
+      VK_TOKEN: ${VK_TOKEN}
+
+volumes:
+  daterdata:
+    external: true

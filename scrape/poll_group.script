@@ -1,0 +1,24 @@
+var data = [];
+
+var base_offset = $offset;
+
+var i = 0;
+
+var result = null;
+
+while (i < 25) {
+    result = API.groups.getMembers({ "group_id": $group_id, 
+    "offset": base_offset + i * 1000, 
+    "count": 1000, 
+    "sort": "id_asc"
+    }).items;
+    data = data + result;
+
+    if (result.length < 1000) {
+        i = 25;
+    } else {
+        i = i + 1;
+    }
+};
+
+return data;
